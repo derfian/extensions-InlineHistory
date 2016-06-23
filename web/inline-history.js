@@ -87,7 +87,7 @@ var inline_history = {
       var start_index = ih_activity_sort_order == 'newest_to_oldest_desc_first' ? 1 : 0;
       for (var j = start_index, jl = commentTimes.length; j < jl; j++) {
         var commentHead = commentTimes[j].parentNode;
-        var mainUser = Dom.getElementsByClassName('email', 'a', commentHead)[0].href.substr(7);
+        var mainUser = this.getUser(commentHead);
         var text = commentTimes[j].textContent || commentTimes[j].innerText;
         var mainTime = this.trim(text);
 
@@ -393,5 +393,25 @@ var inline_history = {
 
   trim: function(s) {
     return s.replace(/^\s+|\s+$/g, '');
+  },
+
+  getUser: function(el) {
+    // Easiest: there's a clickable link with the email address
+    var emaillinks = Dom.getElementsByClassName('email', 'a', el);
+    if (emaillinks && emaillinks.length > 0) {
+      return emaillinks[0].href.substr(7);
+    }
+
+    // No? We'll have to dig around for it then.
+    var vcardspans = Dom.getElementsByClassName('vcard', 'span', el);
+    if (vcardspan && vcardspans.length > 0) {
+      if (vcardspans[0].innerHTML.search(/\(.*@.*\)/) == -1) {
+        return this.trim(vcardspans[0].innerHTML);
+      } else {
+        return this.trim(vcardspans[0].innerHTML.replace(/.*\((.+)\).*/, '$1'));
+      }
+    }
+
+    return '';
   }
 }
