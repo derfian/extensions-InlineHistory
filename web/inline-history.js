@@ -404,7 +404,7 @@ var inline_history = {
 
     // No? We'll have to dig around for it then.
     var vcardspans = Dom.getElementsByClassName('vcard', 'span', el);
-    if (vcardspan && vcardspans.length > 0) {
+    if (vcardspans && vcardspans.length > 0) {
       if (vcardspans[0].innerHTML.search(/\(.*@.*\)/) == -1) {
         return this.trim(vcardspans[0].innerHTML);
       } else {
